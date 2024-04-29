@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Visualising the budget of the New Zealand government from 2010-2023 using a stacked-bar graph / chart.">
+    <title>New Zealand Budget Visualised</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <script type="text/javascript"  src="js/scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <link
+            rel="preload"
+            href="data/2010-23-expenditure3.csv"
+            as="fetch"
+            crossorigin="anonymous" />
+    <link
+            rel="preload"
+            href="data/inflation-index-2010.csv"
+            as="fetch"
+            crossorigin="anonymous" />
+
+    <link
+            rel="preload"
+            href="data/2019-2014-revenue.csv"
+            as="fetch"
+            crossorigin="anonymous" />
+
+    <link
+            rel="preload"
+            href="data/population.csv"
+            as="fetch"
+            crossorigin="anonymous" />
+
+
+    <link rel="stylesheet" href="css/global.css">
+
+</head>
+<body>
+<header>
+    <h1>New Zealand Budget Visualised</h1>
+</header>
+
+<div class = "chartCard">
+    <canvas id="stacked-bar"></canvas>
+</div>
+
+<div class="sidebar">
+    <div id="adjustsContainer">
+        <label id="adjustmentsLabel" for="adjustments">
+            Adjust data for:
+        </label>
+        <select id="adjustments" autocomplete="off" >
+            <option value="inflation" selected>Inflation (2010 $)</option>
+            <option value="infpop">Inflation & Population</option>
+            <option value="gdp">% of GDP</option>
+            <option value="none">None (Nominal)</option>
+        </select>
+    </div>
+    <div id="buttonsContainer">
+    <button class="button-d" id="show-all">Show All</button>
+    <button class="button-d" id="hide-all">Hide All</button>
+    </div>
+    <p id="notice"><i>Individual budget items can be toggled by selecting them on the legend.</i></p>
+</div>
+
+<script>
+    let stackedBar = document.getElementById('stacked-bar').getContext('2d');
+    createStackedBar('data/2010-23-expenditure3.csv','data/2019-2014-revenue.csv',stackedBar);
+</script>
+
+<div class="text">
+    <h2>Data clarifications</h2>
+    <ul>
+        <li>Budgetary votes are frequently <a href="https://www.treasury.govt.nz/publications/budgets/vote-information/notes-historical-vote-information">reorganised</a>, so year-to-year comparisons may not always be valid. To compensate for this, various adjustments have been made combining different votes.</li>
+        <li>All figures for 2023 are projections only.</li>
+        <li>Revenue (IRD) includes various tax credits and transfer payments as expenditures</li>
+    </ul>
+
+    <h2>Data credits</h2>
+    <ul>
+        <li>All expenditure and revenue data has been collected from the New Zealand treasury.</li>
+        <li>GDP, inflation and population data is from the World Bank.</li>
+        <li>GDP, inflation and population projections for 2023 are from Stats NZ (current figures as of July 2023).</li>
+    </ul>
+</div>
+
+<footer>
+    <p>© 2023, Powered by <a href="https://www.chartjs.org/">chart.js</a>, <a href="mailto:contact@visualbudget.nz">Contact</a></p>
+</footer>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RHM4M9QYER"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-RHM4M9QYER');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,180 @@
+:root {
+    --accent: #2c3e50;
+}
+
+* {
+    font-family: sans-serif;
+}
+
+/* GRID Container */
+body {
+    margin: 0;
+    overflow-x: hidden;
+    display: grid;
+    grid-template-areas:
+        "header header"
+        "chartCard sidebar"
+        "text text";
+    grid-template-columns: 10fr 2fr;
+    grid-template-rows: auto 85vh auto;
+    grid-gap: 10px;
+
+}
+
+/* Gird Items */
+header {
+    grid-area: header;
+    text-align: center;
+    overflow: hidden;
+    margin-bottom: 1%;
+    background-color: var(--accent);
+    color: white;
+
+}
+
+.chartCard {
+    grid-area: chartCard;
+
+    border: 3px solid var(--accent);
+    overflow: hidden;
+    margin: 0 0 0 10px;
+    padding: 10px;
+
+}
+
+
+
+.text {
+    grid-area: text;
+}
+
+.sidebar {
+    grid-area: sidebar;
+    display: grid;
+    grid-template-areas:
+        "adjustsContainer"
+        "yearContainer"
+        "buttonsContainer"
+        "notice";
+    grid-template-columns: 1fr;
+    grid-template-rows: 40px 40px 40px auto;
+    grid-gap: 2vw;
+    margin-right: 10px;
+
+}
+
+#buttonsContainer {
+    grid-area: buttonsContainer;
+}
+
+label {
+    grid-area: adjustmentsLabel;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.adjustsContainer {
+    grid-area: adjustsContainer;
+}
+
+#notice {
+    grid-area: notice;
+}
+
+.button-d, select {
+    font-size: 1vw;
+    background-color: var(--accent);
+    border-radius: 4px;
+    border-style: none;
+    color: #fff;
+    cursor: pointer;
+    max-width: none;
+    min-height: 44px;
+    min-width: 10px;
+    outline: none;
+    overflow: hidden;
+    text-align: center;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 45%;
+}
+
+.button-d:hover, .button-d:focus, #adjustments:hover{
+    opacity: .75;
+}
+
+select, label{
+    font-size: 0.8vw;
+}
+select  {
+    height: 3em;
+    border-radius: .25em;
+    overflow: hidden;
+    width: 50%;
+}
+
+select::after {
+    content: '\25BC';
+    top: 0;
+    transition: .25s all ease;
+    pointer-events: none;
+}
+
+.text {
+    margin: 0 10px;
+}
+
+footer{
+    text-align: center;
+    margin: 0 10px;
+}
+
+.yearContainer {
+    grid-area: yearContainer;
+}
+
+@media screen and (max-width:800px) {
+    body {
+        margin: 0;
+        overflow-x: hidden;
+        display: grid;
+        grid-template-areas:
+        "header header"
+        "chartCard chartCard"
+        "sidebar sidebar"
+        "text text";
+        grid-template-columns: 10fr 10fr;
+        grid-template-rows: auto 1300px auto auto;
+        grid-gap: 10px;
+    }
+    #buttonsContainer, .adjustsContainer{
+        width: 320px
+    }
+    select, label, .button-d {
+        font-size: 13px;
+    }
+
+    .chartCard {
+        margin: 0px 5px 0px 5px;
+        padding: 5px;
+    }
+
+    .sidebar{
+
+        place-items: center;
+
+        margin-right: 0;
+    }
+    #notice {
+        margin: 0 10px;
+    }
+
+
+
+
+
+
+}
