@@ -6,6 +6,8 @@
     font-family: sans-serif;
 }
 
+
+
 /* GRID Container */
 body {
     margin: 0;
@@ -14,7 +16,8 @@ body {
     grid-template-areas:
         "header header"
         "chartCard sidebar"
-        "text text";
+        "text text"
+"footer footer";
     grid-template-columns: 10fr 2fr;
     grid-template-rows: auto 85vh auto;
     grid-gap: 10px;

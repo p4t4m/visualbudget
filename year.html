@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>New Zealand Budget Visualised</title>
+  <title>2024 New Zealand Budget Visualised</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script type="text/javascript"  src="js/utils.js"></script>
   <script type="text/javascript"  src="js/pie-chart.js"></script>
@@ -18,10 +18,11 @@
   <h1>New Zealand Budget Visualised</h1>
 </header>
 
-<div class = "chartCard">
-  <canvas id="pie-chart" ></canvas>
+  <div class = "chartCard">
+    <canvas id="pie-chart" ></canvas>
+  </div>
   <div id="legend-container"></div>
-</div>
+<div id="legend"></div>
 <div class="sidebar">
   <div class="adjustsContainer">
     <label id="adjustmentsLabel" for="adjustments">
@@ -52,7 +53,9 @@
       <option value="2020" >2020</option>
       <option value="2021" >2021</option>
       <option value="2022" >2022</option>
-      <option value="2023" selected>2023</option>
+      <option value="2023" >2023</option>
+      <option value="2024" selected>2024</option>
+      <option value="2025" >2025</option>
     </select>
   </div>
   <div id="buttonsContainer">
@@ -64,7 +67,7 @@
 
 <script>
   let pieChart = document.getElementById('pie-chart').getContext('2d');
-  createPieChart('data/2010-23-expenditure3.csv',pieChart);
+  createPieChart('data/2010-25-expenditure2.csv',pieChart);
 </script>
 
 <div class="text">
@@ -72,7 +75,7 @@
   <ul>
     <li>Budgetary votes are frequently <a href="https://www.treasury.govt.nz/publications/budgets/vote-information/notes-historical-vote-information">reorganised</a>, so year-to-year comparisons may not always be valid. To compensate for this, various adjustments have been made combining different votes.</li>
     <li>All figures for 2023 are projections only.</li>
-    <li>Revenue (IRD) includes various tax credits and transfer payments as expenditures</li>
+    <li>Revenue (IRD) includes various tax credits and transfer payments as expenditures.</li>
   </ul>
 
   <h2>Data credits</h2>

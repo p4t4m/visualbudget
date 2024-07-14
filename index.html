@@ -4,30 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Visualising the budget of the New Zealand government from 2010-2023 using a stacked-bar graph / chart.">
-    <title>New Zealand Budget Visualised</title>
+    <title>2024 New Zealand Budget Visualised</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-    <script type="text/javascript"  src="js/scripts.js"></script>
+    <script type="text/javascript"  src="js/utils.js"></script>
+    <script type="text/javascript"  src="js/stacked-bar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
     <link
             rel="preload"
-            href="data/2010-23-expenditure3.csv"
+            href="data/2010-25-expenditure2.csv"
             as="fetch"
             crossorigin="anonymous" />
     <link
             rel="preload"
-            href="data/inflation-index-2010.csv"
-            as="fetch"
-            crossorigin="anonymous" />
-
-    <link
-            rel="preload"
-            href="data/2019-2014-revenue.csv"
+            href="data/2010-25-inflation.csv"
             as="fetch"
             crossorigin="anonymous" />
 
     <link
             rel="preload"
-            href="data/population.csv"
+            href="data/2010-25-revenue.csv"
+            as="fetch"
+            crossorigin="anonymous" />
+
+    <link
+            rel="preload"
+            href="data/2010-25-population.csv"
             as="fetch"
             crossorigin="anonymous" />
 
@@ -54,6 +56,7 @@
             <option value="infpop">Inflation & Population</option>
             <option value="gdp">% of GDP</option>
             <option value="none">None (Nominal)</option>
+            <option value="percentage-of-budget">Percentage of Budget</option>
         </select>
     </div>
     <div id="buttonsContainer">
@@ -65,27 +68,29 @@
 
 <script>
     let stackedBar = document.getElementById('stacked-bar').getContext('2d');
-    createStackedBar('data/2010-23-expenditure3.csv','data/2019-2014-revenue.csv',stackedBar);
+    createStackedBar('data/2010-25-expenditure2.csv','data/2010-25-revenue.csv',stackedBar);
 </script>
 
 <div class="text">
+        <p>Stacked bar chart showing the changes to the New Zealand budget over time.</p>
+
     <h2>Data clarifications</h2>
     <ul>
         <li>Budgetary votes are frequently <a href="https://www.treasury.govt.nz/publications/budgets/vote-information/notes-historical-vote-information">reorganised</a>, so year-to-year comparisons may not always be valid. To compensate for this, various adjustments have been made combining different votes.</li>
-        <li>All figures for 2023 are projections only.</li>
-        <li>Revenue (IRD) includes various tax credits and transfer payments as expenditures</li>
+        <li>All figures for 2024 and 2025 are projections only.</li>
+        <li>Revenue (IRD) includes various tax credits and transfer payments as expenditures.</li>
     </ul>
 
     <h2>Data credits</h2>
     <ul>
-        <li>All expenditure and revenue data has been collected from the New Zealand treasury.</li>
+        <li>All expenditure and revenue data has been collected from The Treasury.</li>
         <li>GDP, inflation and population data is from the World Bank.</li>
-        <li>GDP, inflation and population projections for 2023 are from Stats NZ (current figures as of July 2023).</li>
+        <li>GDP, inflation and population projections for 2024 and 2025 are from The Treasury.</li>
     </ul>
 </div>
 
 <footer>
-    <p>© 2023, Powered by <a href="https://www.chartjs.org/">chart.js</a>, <a href="mailto:contact@visualbudget.nz">Contact</a></p>
+    <p>© 2024, Powered by <a href="https://www.chartjs.org/">chart.js</a>, <a href="mailto:contact@visualbudget.nz">Contact</a></p>
 </footer>
 
 <!-- Google tag (gtag.js) -->

@@ -1,5 +1,3 @@
-const barChartLabels = [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
-
 let originalVotes;
 let chart;
 
@@ -9,18 +7,19 @@ function createStackedBar(expenditures, revenues, element) {
         header: true,
         skipEmptyLines: true,
         complete: function (results) {
+
             Papa.parse(revenues, {
                 download: true,
                 header: true,
                 skipEmptyLines: true,
                 complete: function (revenueResults) {
-                    let votes = createVotesFromData(results, revenueResults);
+
                     const config = {
                         responsive: true,
                         type: 'bar',
                         data: {
-                            labels: barChartLabels,
-                            datasets: votes,
+                            labels: expenditureColumnNames,
+                            datasets: createVotesFromData(results, revenueResults),
                         },
                         options: {
                             maintainAspectRatio: false,
@@ -37,7 +36,7 @@ function createStackedBar(expenditures, revenues, element) {
                                 },
                                 title: {
                                     display: true,
-                                    text: 'New Zealand budget 2010-23 by vote',
+                                    text: 'New Zealand budget 2010-25 by vote',
                                 },
                             },
                             scales: {
@@ -58,15 +57,13 @@ function createStackedBar(expenditures, revenues, element) {
                         }
                     };
 
-                    const stackedBar = new Chart(
+                    chart = new Chart(
                         element,
                         config
                     );
 
-
-                    setGlobalButtons(stackedBar);
-                    chart = stackedBar;
-                    originalVotes = stackedBar.data.datasets;
+                    setGlobalButtons(chart);
+                    originalVotes = chart.data.datasets;
 
                     adjust();
                 }
@@ -88,8 +85,8 @@ function createVotesFromData(results, revenueResults) {
         order: 0,
     });
     for (const [key, value] of Object.entries(revenueResults.data)) {
-        if (parseInt(value["Grand Total"]) >= 0) {
-            revenueData.push(parseInt(value["Grand Total"]));
+        if (parseInt(value[revenueColumnName]) >= 0) {
+            revenueData.push(parseInt(value[revenueColumnName]));
         }
     }
     return votes;
@@ -127,17 +124,17 @@ function adjust() {
     const adjustment = adjustments.value;
     const original = chart.data.datasets;
     chart.data.datasets = JSON.parse(JSON.stringify(originalVotes));
-    Papa.parse("data/inflation-index-2010.csv", {
+    Papa.parse(inflationFile, {
         download: true,
         header: true,
         skipEmptyLines: true,
         complete: function (results_infl) {
-            Papa.parse("data/population.csv", {
+            Papa.parse(populationFile, {
                 download: true,
                 header: true,
                 skipEmptyLines: true,
                 complete: function (results_pop) {
-                    Papa.parse("data/gdp.csv", {
+                    Papa.parse(gdpFile, {
                         download: true,
                         header: true,
                         skipEmptyLines: true,
@@ -149,17 +146,32 @@ function adjust() {
                                 for (let i = 0; i < cd.data.length; i++) {
                                     let adjusted = cd.data[i];
                                     if (adjustment === "inflation" || adjustment === "infpop") {
-                                        adjusted = (adjusted * (100 / results_infl.data[results_infl.data.length - cd.data.length + i]["FP.CPI.TOTL"]));
+                                        adjusted = (adjusted * (100 / results_infl.data[results_infl.data.length - cd.data.length + i][inflationColumnName]));
                                     }
                                     if(adjustment === "inflation" || adjustment === "none"){
                                         adjusted = adjusted / 1000;
 
                                     }
                                     if (adjustment === "infpop") {
-                                        adjusted = (adjusted / (results_pop.data[results_pop.data.length - cd.data.length + i]["SP.POP.TOTL"])) * 1000;
+                                        adjusted = (adjusted / (results_pop.data[results_pop.data.length - cd.data.length + i][populationColumnName])) * 1000;
                                     }
                                     if (adjustment === "gdp") {
-                                        adjusted = (10 * (adjusted / (results_gdp.data[results_gdp.data.length - cd.data.length + i]["New Zealand"]))) * 10000;
+                                        adjusted = (10 * (adjusted / (results_gdp.data[results_gdp.data.length - cd.data.length + i][gdpColumnName]))) * 10000;
+                                    }
+                                    if(adjustment === "percentage-of-budget") {
+                                        let year = i
+                                        let total_of_year = 0;
+                                        for (let j = 0; j < original.length-1; j++) {
+
+                                            if(originalVotes[j].data[year] !== undefined){
+                                            total_of_year += originalVotes[j].data[year];
+                                        }
+                                        }
+
+
+
+                                        adjusted = (adjusted / total_of_year);
+
                                     }
                                     newData.push(adjusted);
                                 }
@@ -176,6 +188,9 @@ function adjust() {
                                     break;
                                 case "gdp":
                                     chart.options.scales['y'].title.text = "% of New Zealand GDP"
+                                    break;
+                                case "percentage-of-budget":
+                                    chart.options.scales['y'].title.text = "% of total budget"
                                     break;
                                 default:
                                     chart.options.scales['y'].title.text = "Millions NZD"

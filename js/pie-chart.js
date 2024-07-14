@@ -1,72 +1,80 @@
 let originaldata;
 let chart;
-let originalData;
 let yearElement;
 
-function createPieChart(expenditures, element) {
-
-
+function onResize() {
     const actual_width = window.innerWidth;
 
-    if(actual_width < 800) {
+    if (actual_width < 800) {
         const pc = document.getElementById('pie-chart');
         pc.height = 1300;
 
         pc.width = window.innerWidth * 0.9;
     } else {
-const pc = document.getElementById('pie-chart');
+        const pc = document.getElementById('pie-chart');
         //pc.height = 700;
         pc.width = window.innerWidth * 0.8;
-        pc.height = window.innerHeight * 0.8;
+        pc.height = window.innerHeight * 0.83;
     }
+}
+function createPieChart(expenditures, element) {
+
+    yearElement = document.getElementById('yearAdjust');
+    yearElement.addEventListener('change', changeYear);
+
+    onResize()
 
     Papa.parse(expenditures, {
         download: true,
         header: true,
         skipEmptyLines: true,
         complete: function (results) {
-                    originalData = results;
-                    let data = formatData(results,"2023");
-                    const config = {
-                        type: 'pie',
-                        data: data,
-                        options: {
+            originalData = results;
+            let data = formatData(results, yearElement.value);
+            const config = {
+                type: 'pie',
+                data: data,
+                options: {
 
-                            responsive: false,
+                    responsive: false,
 
-                            plugins: {
+                    plugins: {
 
-                                legend: {
-                                    position: 'bottom',
-                                    display: true,
-                                },
-                                title: {
-                                    display: true,
-                                }
-                            }
+                        legend: {
+                            display:true,
                         },
+                        title: {
+                            display: true,
+                        },
+                    }
+                },
 
-                    };
+            };
 
-                    console.log(config);
+            console.log(config);
 
-                    const pie = new Chart(
-                        element,
-                        config
-                    );
-
-                    yearElement = document.getElementById('yearAdjust');
-                    yearElement.addEventListener('change', changeYear);
+            const pie = new Chart(
+                element,
+                config
+            );
 
 
-                    setGlobalButtons(pie);
-                    chart = pie;
 
-                    adjust();
-                    changeYear();
-                    pie.update();
-                }
-            });
+
+            document.getElementById('show-all').onclick = function () {
+                setAllLabels(pie, false);
+            };
+
+            document.getElementById('hide-all').onclick = function () {
+                setAllLabels(pie, true);
+            };
+            chart = pie;
+
+            adjust();
+            changeYear();
+            pie.update();
+        }
+    });
 }
 
 function changeYear() {
@@ -82,7 +90,7 @@ function formatData(results, year) {
     for (let i = 0; i < data.length; i++) {
         const vote = data[i]['Vote'];
         const value = data[i][year];
-        if(value > 0) {
+        if (value > 0) {
             tuples.push([vote, value]);
         }
     }
@@ -104,26 +112,29 @@ function formatData(results, year) {
 }
 
 function setAllLabels(chart, hidden) {
-    chart.data.datasets.forEach(function (ds) {
+    console.log(chart.data.datasets);
+    const meta = chart.getDatasetMeta(0);
+    meta.data.forEach(function (ds) {
         ds.hidden = hidden;
     });
     chart.update();
+    console.log(chart.data.datasets);
 }
 
 function adjust() {
     const adjustment = adjustments.value;
     const year = parseInt(yearElement.value);
-    Papa.parse("data/inflation-index-2010.csv", {
+    Papa.parse("data/2010-25-inflation.csv", {
         download: true,
         header: true,
         skipEmptyLines: true,
         complete: function (results_infl) {
-            Papa.parse("data/population.csv", {
+            Papa.parse("data/2010-25-population.csv", {
                 download: true,
                 header: true,
                 skipEmptyLines: true,
                 complete: function (results_pop) {
-                    Papa.parse("data/gdp.csv", {
+                    Papa.parse("data/2010-25-gdp.csv", {
                         download: true,
                         header: true,
                         skipEmptyLines: true,
@@ -132,17 +143,18 @@ function adjust() {
                             originaldata.forEach(function (value) {
                                 let adjusted = value;
                                 if (adjustment === "inflation" || adjustment === "infpop") {
-                                    adjusted = (adjusted * (100 / results_infl.data[results_infl.data.length - 2023 + year-1]["FP.CPI.TOTL"]));
+                                    console.log(results_infl.data[results_infl.data.length + year - 2025 - 1]["2010 Index"])
+                                    adjusted = (adjusted * (100 / results_infl.data[results_infl.data.length + year - 2025 - 1]["2010 Index"]));
                                 }
-                                if(adjustment === "inflation" || adjustment === "none"){
+                                if (adjustment === "inflation" || adjustment === "none") {
                                     adjusted = adjusted / 1000;
 
                                 }
                                 if (adjustment === "infpop") {
-                                    adjusted = (adjusted / (results_pop.data[results_pop.data.length - 2023 + year-1]["SP.POP.TOTL"])) * 1000;
+                                    adjusted = (adjusted / (results_pop.data[results_pop.data.length + year - 2025 - 1]["Population"])) * 1000;
                                 }
                                 if (adjustment === "gdp") {
-                                    adjusted = (10 * (adjusted / (results_gdp.data[results_gdp.data.length - 2023 + year-1]["New Zealand"]))) * 10000;
+                                    adjusted = (10 * (adjusted / (results_gdp.data[results_gdp.data.length + year - 2025 - 1]["GDP"]))) * 10000;
                                 }
                                 newData.push(adjusted);
 
@@ -154,13 +166,13 @@ function adjust() {
                                     chart.options.plugins.title.text = "New Zealand Budget " + year + ", Millions NZD (2010 Dollars)";
                                     break;
                                 case "infpop":
-                                    chart.options.plugins.title.text = "New Zealand Budget "  + year + ", NZD per person (2010 Dollars)";
+                                    chart.options.plugins.title.text = "New Zealand Budget " + year + ", NZD per person (2010 Dollars)";
                                     break;
                                 case "gdp":
-                                    chart.options.plugins.title.text = "New Zealand Budget "  + year + ", % of New Zealand GDP"
+                                    chart.options.plugins.title.text = "New Zealand Budget " + year + ", % of New Zealand GDP"
                                     break;
                                 default:
-                                    chart.options.plugins.title.text = "New Zealand Budget "  + year + ", Millions NZD"
+                                    chart.options.plugins.title.text = "New Zealand Budget " + year + ", Millions NZD"
                                     break;
                             }
                             chart.update();
@@ -210,8 +222,8 @@ const htmlLegendPlugin = {
 
         let count = 0;
         items.forEach(item => {
-            if(count % 10 === 0){
-                 ul = getOrCreateLegendList(chart, options.containerID, 'ul'+count);
+            if (count % 10 === 0) {
+                ul = getOrCreateLegendList(chart, options.containerID, 'ul' + count);
             }
             count++;
             const li = document.createElement('li');

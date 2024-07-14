@@ -10,6 +10,7 @@
     grid-template-rows: 40px 40px 40px auto;
     grid-gap: 2vw;
     margin-right: 10px;
+    grid-row:2;
 
 }
 
@@ -21,4 +22,19 @@
     width: auto;
 }
 @media screen and (max-width:800px) {
+}
+
+.outerChart {
+    margin: 0 0 0 10px;
+    padding: 10px;
+    height: fit-content;
+    grid-area: chartCard;
+    grid-row:2;
+}
+.text {
+    grid-row:3;
+}
+
+.header {
+    grid-row: 1;
 }

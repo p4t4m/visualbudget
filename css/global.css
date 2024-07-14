@@ -14,7 +14,8 @@ body {
     grid-template-areas:
         "header header"
         "chartCard sidebar"
-        "text text";
+        "text text"
+"footer footer";
     grid-template-columns: 10fr 2fr;
     grid-template-rows: auto 85vh auto;
     grid-gap: 10px;
@@ -108,7 +109,19 @@ header {
 
 footer{
     text-align: center;
-    margin: 0 10px;
+}
+
+footer {
+    text-align: center;
+    overflow: hidden;
+    background-color: var(--accent);
+    color: white;
+    width: 100%;
+    grid-area:footer;
+}
+
+footer a{
+    color: orange;
 }
 
 
@@ -119,7 +132,7 @@ select {
     height: 3em;
     border-radius: .25em;
     overflow: hidden;
-    width: 50%;
+    width: 60%;
 }
 
 select::after {
@@ -134,7 +147,7 @@ select::after {
 }
 
 
-@media screen and (max-width:800px) {
+@media screen and (max-width:824px) {
     body {
         margin: 0;
         overflow-x: hidden;
@@ -143,9 +156,10 @@ select::after {
         "header header"
         "chartCard chartCard"
         "sidebar sidebar"
-        "text text";
+        "text text"
+    "footer footer";
         grid-template-columns: 10fr 10fr;
-        grid-template-rows: auto 1300px auto auto;
+        grid-template-rows: auto 1400px auto auto;
         grid-gap: 10px;
     }
     #buttonsContainer, .adjustsContainer, .yearContainer{
@@ -153,6 +167,9 @@ select::after {
     }
     select, label, .button-d {
         font-size: 13px;
+    }
+    select {
+        width:60%;
     }
 
     .chartCard {
